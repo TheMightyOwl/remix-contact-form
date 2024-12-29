@@ -9,6 +9,7 @@ declare module "@remix-run/node" {
 }
 
 export default defineConfig({
+  base: "/remix-contact-form/",
   plugins: [
     remix({
       future: {
@@ -19,6 +20,7 @@ export default defineConfig({
         v3_lazyRouteDiscovery: true,
       },
       ssr: false,
+      basename: "/remix-contact-form/"
     }),
     tsconfigPaths(),
   ],
