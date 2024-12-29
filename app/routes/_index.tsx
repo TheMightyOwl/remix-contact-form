@@ -1,28 +1,52 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { MetaFunction } from "@remix-run/node"
 import signUpGraphicMobile from "../../public/illustration-sign-up-mobile.svg"
 import iconList from "../../public/icon-list.svg"
 import iconSuccess from "../../public/icon-success.svg"
-import { useState } from 'react'
-import { list } from "postcss";
+import { useState, useEffect } from 'react'
+import { useForm, SubmitHandler } from 'react-hook-form'
+import { list } from "postcss"
 
 export const meta: MetaFunction = () => {
   return [
     { title: "New Remix App" },
     { name: "description", content: "Welcome to Remix!" },
-  ];
-};
+  ]
+}
+
+type Inputs = {
+  email: string,
+}
 
 export default function Index() {
+  const { register, handleSubmit, reset, formState, formState: { errors, isSubmitSuccessful } } = useForm<Inputs>()
 
   const [submitted, setSubmitted] = useState(false)
   const [email, setEmail] = useState("")
+  const [valid, setValid] = useState(true)
+
+  const emailPattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const listStyle = {
     listStyleImage: `url(${iconList})`
   }
 
-  function submitForm() {
-    setSubmitted(true)
+  const submitForm: SubmitHandler<Inputs> = (data) => {
+    if (!errors.email) {
+      setSubmitted(true);
+      setEmail(data.email);
+    }
+  }
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset({ email: ""});
+    }
+  }, [formState, isSubmitSuccessful, reset])
+
+  function dismiss() {
+    setEmail("")
+    setValid(true)
+    setSubmitted(false)
   }
 
   return (
@@ -33,12 +57,14 @@ export default function Index() {
           <h1 className="font-bold my-9">Thanks for subscribing!</h1>
           <p>A confirmation email has been send to <strong>{email}</strong>. Please open it and click the button inside to confirm your subscription.</p>
         </div>
-        <button
-          className="bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14"
-          onClick={() => setSubmitted(!submitted)}
-        >
-          Dismiss message
-        </button>
+        <form action="">
+          <button
+            className="bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14"
+            onClick={dismiss}
+          >
+            Dismiss message
+          </button>
+        </form>
       </div>
       :
       <div>
@@ -47,18 +73,30 @@ export default function Index() {
           <h1 className="font-bold">Stay updated!</h1>
           <p>Join 60,000+ product managers receiving monthly updates on:</p>
           <ul className="mb-8">
-            {updateList.map((item) =>
-              <li className="bullet mb-3 last:mb-0">{item}</li>
+            {updateList.map((item, i) =>
+              <li key={i} className="bullet mb-3 last:mb-0">{item}</li>
             )}
           </ul>
-          <p className="text-sm font-bold mb-1">Email address</p>
-          <input className="border border-grey w-full rounded p-3" type="text" name="email" id="" onChange={(event) => setEmail(event.target.value)}/>
-          <button
-            className="bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14"
-            onClick={() => setSubmitted(!submitted)}
-          >
-            Subsribe to monthly newsletter
-          </button>
+          <p className="text-xs font-bold mb-2 inline-block float-left">Email address</p>
+          {errors.email &&
+            <p className="text-xs font-bold mb-2 inline-block float-right text-tomato">Valid email required</p>
+          }
+          <form id="email-form" onSubmit={handleSubmit(submitForm)}>
+            <input
+              className={`border border-grey w-full rounded-lg py-3 px-6 focus:outline-none focus:border-black ${errors.email && "border-tomato text-tomato bg-[#ffcdca]"}`}
+              placeholder="name@company.com"
+              {...register("email", { required: true, pattern: emailPattern })}
+              type="text"
+              name="email"
+              id="email"
+            />
+            <button
+              className="bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14 focus:outline-none"
+              type="submit"
+            >
+              Subsribe to monthly newsletter
+            </button>
+          </form>
         </div>
       </div>
   )
