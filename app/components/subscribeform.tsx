@@ -62,7 +62,7 @@ export default function SubscribeForm({ setSubmitted, setEmail }: {
                 </div>
                 <form id="email-form" onSubmit={handleSubmit(submitForm)}>
                     <input
-                        className={`border border-grey w-full rounded-lg py-3 px-6 focus:outline-none focus:border-black ${errors.email && "border-tomato text-tomato bg-[#ffcdca]"}`}
+                        className={`border border-grey w-full rounded-lg py-3 px-6 focus:outline-none focus:border-black ${errors.email && "focus:border-tomato border-tomato text-tomato bg-[#ffcdca]"}`}
                         placeholder="name@company.com"
                         {...register("email", { required: true, pattern: emailPattern })}
                         type="text"
