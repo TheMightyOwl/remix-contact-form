@@ -15,7 +15,7 @@ export default function SuccessModal({ onDismiss, email }: {
             </div>
             <form onSubmit={onDismiss}>
                 <button
-                    className="bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14"
+                    className="hover:bg-gradient-to-r from-pink-400 to-tomato bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14"
                 >
                     Dismiss message
                 </button>

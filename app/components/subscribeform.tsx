@@ -70,7 +70,7 @@ export default function SubscribeForm({ setSubmitted, setEmail }: {
                         id="email"
                     />
                     <button
-                        className="bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14 focus:outline-none"
+                        className="hover:bg-gradient-to-r from-pink-400 to-tomato bg-dark-slate text-white w-full p-3 rounded-lg my-5 font-bold h-14 focus:outline-none"
                         type="submit"
                     >
                         Subsribe to monthly newsletter
